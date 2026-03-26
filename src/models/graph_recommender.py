@@ -27,10 +27,10 @@ where
 
 References
 ----------
-* Köhler et al. (2008) "Walking the interactome for prioritization of
-  candidate disease genes", AJHG 82.
-* Brin & Page (1998) "The anatomy of a large-scale hypertextual Web search
-  engine", WWW.
+* Gysi et al. (2021) "Network medicine framework for identifying
+  drug-repurposing opportunities for COVID-19." PNAS 118(19), e2025581118.
+* Nguyen et al. (2024) "Sequence modeling and design from molecular to genome
+  scale with Evo." Science 386, eado9336.
 """
 
 from __future__ import annotations

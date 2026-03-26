@@ -110,5 +110,43 @@ async def root():
 
 @app.get("/api/v1/stats", tags=["stats"])
 async def get_stats():
-    """Return global dataset statistics."""
+    """Return global dataset statistics (gene count, disease count, top entities)."""
     return app.state.stats
+
+
+@app.get("/api/v1/search", tags=["search"])
+async def search(
+    q:         str  = "",
+    page_size: int  = 10,
+    genes_only: bool = False,
+    diseases_only: bool = False,
+):
+    """
+    Unified search across both genes and diseases.
+
+    Returns two lists – `genes` and `diseases` – each filtered by the query
+    string (case-insensitive substring match).  Handy for autocomplete.
+
+    Examples
+    --------
+    /api/v1/search?q=brca          → genes starting with BRCA + diseases containing "Brca"
+    /api/v1/search?q=cancer&diseases_only=true
+    """
+    model    = app.state.model
+    q_lower  = q.strip().lower()
+    q_upper  = q.strip().upper()
+
+    matched_genes    = []
+    matched_diseases = []
+
+    if not diseases_only:
+        matched_genes = [g for g in model.genes if q_upper in g or q_lower in g.lower()][:page_size]
+
+    if not genes_only:
+        matched_diseases = [d for d in model.diseases if q_lower in d.lower()][:page_size]
+
+    return {
+        "query":    q,
+        "genes":    matched_genes,
+        "diseases": matched_diseases,
+    }

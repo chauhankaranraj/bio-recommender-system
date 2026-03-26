@@ -18,10 +18,10 @@ We augment standard NMF with:
 
 References
 ----------
-* Lee & Seung (1999) "Learning the parts of objects by non-negative matrix
-  factorization", Nature 401.
-* Hu, Koren & Volinsky (2008) "Collaborative Filtering for Implicit Feedback
-  Datasets", ICDM.
+* Kleshchevnikov et al. (2022) "cell2location maps fine-grained cell types in
+  spatial transcriptomics." Nature Biotechnology 40, 661–671.
+* Lotfollahi et al. (2023) "Mapping single-cell data to reference atlases by
+  transfer learning." Nature Biotechnology 41, 1461–1477.
 """
 
 from __future__ import annotations

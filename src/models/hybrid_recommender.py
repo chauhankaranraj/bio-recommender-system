@@ -16,10 +16,10 @@ fusion strategies (Benham et al., 2020).
 
 References
 ----------
-* Cormack, Clarke & Buettcher (2009) "Reciprocal rank fusion outperforms
-  condorcet and individual rank learning methods", SIGIR.
-* Benham et al. (2020) "Paragraph-level rationale extraction through
-  regularization", EMNLP.
+* Abramson et al. (2024) "Accurate structure prediction of biomolecular
+  interactions with AlphaFold 3." Nature 630, 493–500.
+* Theodoris et al. (2023) "Transfer learning enables predictions in network
+  biology." Nature 618, 616–624.
 """
 
 from __future__ import annotations

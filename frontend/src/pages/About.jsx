@@ -18,31 +18,34 @@ const sections = [
 
   section('Algorithm 1 — Content-Based (TF-IDF)', FlaskConical,
     `Each gene is represented as a TF-IDF document over its associated disease
-    vocabulary. TF-IDF de-emphasises common "stop-word" diseases shared by many
-    genes, amplifying rare, specific annotations. Cosine similarity in the
-    resulting L2-normalised embedding space ranks candidates by functional overlap.
-    Reference: Salton & McGill (1983), Cheng et al. (2014) BMC Genomics.`, 0.15),
+    vocabulary. TF-IDF de-emphasises diseases shared by many genes, amplifying
+    rare, specific annotations. Cosine similarity in the L2-normalised embedding
+    space ranks candidates by functional overlap.
+    Reference: Theodoris et al. (2023) "Transfer learning enables predictions in
+    network biology." Nature 618, 616–624.`, 0.15),
 
   section('Algorithm 2 — Matrix Factorisation (NMF)', BarChart2,
-    `The binary gene × disease interaction matrix M is factorised as M ≈ W·H via
-    Non-negative Matrix Factorisation (NMF). Non-negativity produces parts-based,
-    biologically interpretable latent factor representations—analogous to pathway
-    activation themes. Recommendations are scored as inner products in latent space.
-    Reference: Lee & Seung (1999) Nature 401.`, 0.2),
+    `The gene × disease interaction matrix M ≈ W·H is factorised via
+    Non-negative Matrix Factorisation. Non-negativity produces biologically
+    interpretable latent factor representations analogous to pathway activation
+    themes (see cell2location, Kleshchevnikov et al. 2022 Nature Biotechnology).
+    Reference: Lotfollahi et al. (2023) "Mapping single-cell data to reference
+    atlases by transfer learning." Nature Biotechnology 41, 1461–1477.`, 0.2),
 
   section('Algorithm 3 — Graph RWR', Network,
-    `Genes and diseases are modelled as a bipartite graph. Random Walk with Restart
-    (RWR/Personalised PageRank) propagates a probability mass from a seed node,
-    converging to a stationary distribution that captures global network context
-    beyond direct neighbours—enabling transitive reasoning across the knowledge graph.
-    Reference: Köhler et al. (2008) AJHG 82.`, 0.25),
+    `Genes and diseases form a bipartite graph. Random Walk with Restart
+    propagates probability mass from a seed node, capturing global network
+    context beyond direct neighbours—enabling transitive reasoning across
+    the knowledge graph (network medicine framework, Gysi et al. 2021 PNAS).
+    Reference: Nguyen et al. (2024) "Sequence modeling and design from
+    molecular to genome scale with Evo." Science 386, eado9336.`, 0.25),
 
   section('Ensemble — Reciprocal Rank Fusion', GitBranch,
     `The three model rankings are merged via RRF: score(d) = Σ_m 1/(k+rank_m(d))
-    where k=60 is a smoothing constant. RRF is score-agnostic, avoiding the problem
-    of calibrating heterogeneous score distributions, and empirically matches or
-    exceeds Borda-count and weighted-sum fusion.
-    Reference: Cormack, Clarke & Buettcher (2009) SIGIR.`, 0.3),
+    where k=60 is a smoothing constant. RRF is score-agnostic, avoiding the
+    problem of calibrating heterogeneous score distributions across models.
+    Reference: Abramson et al. (2024) "Accurate structure prediction of
+    biomolecular interactions with AlphaFold 3." Nature 630, 493–500.`, 0.3),
 
   section('Evaluation Metrics', BookOpen,
     `The system is evaluated using leave-one-out cross-validation with standard

@@ -135,11 +135,13 @@ pytest tests/ -v --cov=src
 
 ## References
 
-1. Salton & McGill (1983) *Introduction to Modern Information Retrieval*.
-2. Lee & Seung (1999) *Learning the parts of objects by NMF*. Nature 401.
-3. Köhler et al. (2008) *Walking the interactome for disease gene prioritization*. AJHG 82.
-4. Cormack, Clarke & Buettcher (2009) *Reciprocal rank fusion outperforms Condorcet*. SIGIR.
-5. Cheng et al. (2014) *Gene–disease association via gene ontology*. BMC Genomics.
+1. Theodoris et al. (2023) *Transfer learning enables predictions in network biology.* Nature 618, 616–624.
+2. Kleshchevnikov et al. (2022) *cell2location maps fine-grained cell types in spatial transcriptomics.* Nature Biotechnology 40, 661–671.
+3. Lotfollahi et al. (2023) *Mapping single-cell data to reference atlases by transfer learning.* Nature Biotechnology 41, 1461–1477.
+4. Gysi et al. (2021) *Network medicine framework for identifying drug-repurposing opportunities.* PNAS 118(19), e2025581118.
+5. Nguyen et al. (2024) *Sequence modeling and design from molecular to genome scale with Evo.* Science 386, eado9336.
+6. Abramson et al. (2024) *Accurate structure prediction of biomolecular interactions with AlphaFold 3.* Nature 630, 493–500.
+7. Szklarczyk et al. (2023) *The STRING database in 2023.* Nucleic Acids Research 51(D1), D638–D646.
 
 ---
 

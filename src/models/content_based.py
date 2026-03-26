@@ -12,9 +12,11 @@ cares about.  Cosine similarity in the resulting embedding space captures
 
 References
 ----------
-* Salton & McGill (1983) Introduction to Modern Information Retrieval.
-* Cheng et al. (2014) "A bioinformatics approach to identify gene–disease
-  associations via gene ontology", BMC Genomics.
+* Theodoris et al. (2023) "Transfer learning enables predictions in network
+  biology." Nature 618, 616–624.
+* Szklarczyk et al. (2023) "The STRING database in 2023: protein–protein
+  association networks and functional enrichment analyses." Nucleic Acids
+  Research 51(D1), D638–D646.
 """
 
 from __future__ import annotations
