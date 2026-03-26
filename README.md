@@ -5,7 +5,7 @@
 [![React 18](https://img.shields.io/badge/React-18-61DAFB.svg)](https://reactjs.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> A PhD-level computational biology recommender system for predicting gene–disease
+> A computational biology recommender system for predicting gene–disease
 > associations using TF-IDF content-based filtering, NMF matrix factorisation, and
 > bipartite Random Walk with Restart (RWR), fused via Reciprocal Rank Fusion (RRF).
 
