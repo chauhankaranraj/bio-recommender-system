@@ -1,11 +1,16 @@
 """
 Disease endpoints.
 
-GET /api/v1/diseases                         – paginated disease list
-GET /api/v1/diseases/{disease}               – disease detail + associated genes
-GET /api/v1/diseases/{disease}/similar       – similar diseases
-GET /api/v1/diseases/{disease}/recommend     – recommended genes for a disease
-GET /api/v1/diseases/{disease}/network       – network sub-graph
+Disease names contain spaces but NOT slashes, so we use the standard
+{disease} path parameter (URL-encoded) and declare action routes
+(/similar, /recommend, /network) BEFORE the bare detail route so
+FastAPI matches them correctly.
+
+GET /api/v1/diseases                           – paginated disease list
+GET /api/v1/diseases/{disease}/similar         – similar diseases
+GET /api/v1/diseases/{disease}/recommend       – recommended genes for a disease
+GET /api/v1/diseases/{disease}/network         – network sub-graph
+GET /api/v1/diseases/{disease}                 – disease detail + associated genes
 """
 
 from __future__ import annotations
@@ -42,25 +47,9 @@ async def list_diseases(
     }
 
 
-@router.get("/diseases/{disease:path}")
-async def get_disease(request: Request, disease: str):
-    """Return disease detail including all associated genes."""
-    df      = request.app.state.df
-    disease = disease.strip().title()
+# ── Action routes MUST be declared before the bare detail route ───────────────
 
-    sub = df[df["disease"] == disease]
-    if sub.empty:
-        raise HTTPException(status_code=404, detail=f"Disease '{disease}' not found.")
-
-    genes = sorted(sub["gene"].unique().tolist())
-    return {
-        "disease":   disease,
-        "gene_count": len(genes),
-        "genes":     genes,
-    }
-
-
-@router.get("/diseases/{disease:path}/similar")
+@router.get("/diseases/{disease}/similar")
 async def similar_diseases(
     request: Request,
     disease: str,
@@ -85,7 +74,7 @@ async def similar_diseases(
     }
 
 
-@router.get("/diseases/{disease:path}/recommend")
+@router.get("/diseases/{disease}/recommend")
 async def recommend_genes(
     request: Request,
     disease: str,
@@ -110,7 +99,7 @@ async def recommend_genes(
     }
 
 
-@router.get("/diseases/{disease:path}/network")
+@router.get("/diseases/{disease}/network")
 async def disease_network(
     request: Request,
     disease: str,
@@ -128,6 +117,24 @@ async def disease_network(
         )
 
     return data
+
+
+@router.get("/diseases/{disease}")
+async def get_disease(request: Request, disease: str):
+    """Return disease detail including all associated genes."""
+    df      = request.app.state.df
+    disease = disease.strip().title()
+
+    sub = df[df["disease"] == disease]
+    if sub.empty:
+        raise HTTPException(status_code=404, detail=f"Disease '{disease}' not found.")
+
+    genes = sorted(sub["gene"].unique().tolist())
+    return {
+        "disease":    disease,
+        "gene_count": len(genes),
+        "genes":      genes,
+    }
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────

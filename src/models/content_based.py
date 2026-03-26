@@ -100,26 +100,36 @@ class ContentBasedRecommender(BaseRecommender):
     def recommend_for_gene(
         self, gene: str, top_k: int = 10
     ) -> RecommendationResponse:
-        """Return top-k diseases for *gene* by cosine similarity in disease space."""
+        """
+        Return top-k diseases for *gene*.
+
+        Strategy: find genes with similar disease profiles (cosine sim in
+        disease-feature space), then aggregate their disease association weights.
+        This surfaces diseases linked to functionally similar genes – exactly
+        the transitive inference a clinical researcher wants.
+        """
         self._assert_fitted()
         gene = self._normalise_gene(gene)
 
         if gene not in self._gene_idx:
             return RecommendationResponse(query=gene, query_type="gene", model=self.name)
 
-        vec = self._gene_matrix[self._gene_idx[gene]].reshape(1, -1)
-        sims = cosine_similarity(vec, self._disease_matrix)[0]
+        # gene_matrix is (n_genes, n_diseases) – compare rows in disease-space
+        gene_vec = self._gene_matrix[self._gene_idx[gene]].reshape(1, -1)   # (1, n_diseases)
+        gene_sims = cosine_similarity(gene_vec, self._gene_matrix)[0]        # (n_genes,)
+        gene_sims[self._gene_idx[gene]] = 0.0   # exclude self from aggregation
 
-        # Disease profiles that don't include *gene* are fully unseen; we can
-        # still rank them – high cosine means similar gene neighbourhood.
-        top_idx = np.argsort(sims)[::-1][:top_k]
+        # Weighted sum across all genes → disease relevance scores
+        scores = gene_sims @ self._gene_matrix   # (n_diseases,)
+
+        top_idx = np.argsort(scores)[::-1][:top_k]
         results = [
             RecommendationResult(
                 name=self._diseases[i],
-                score=float(sims[i]),
-                reason="TF-IDF cosine similarity",
+                score=float(scores[i]),
+                reason="TF-IDF similar-gene aggregation",
             )
-            for i in top_idx if sims[i] > 0
+            for i in top_idx if scores[i] > 0
         ]
         return RecommendationResponse(
             query=gene, query_type="gene", results=results, model=self.name
@@ -128,24 +138,34 @@ class ContentBasedRecommender(BaseRecommender):
     def recommend_for_disease(
         self, disease: str, top_k: int = 10
     ) -> RecommendationResponse:
-        """Return top-k genes for *disease* by cosine similarity in gene space."""
+        """
+        Return top-k genes for *disease*.
+
+        Strategy: find diseases with similar gene profiles (cosine sim in
+        gene-feature space), then aggregate their gene association weights.
+        """
         self._assert_fitted()
         disease = self._normalise_disease(disease)
 
         if disease not in self._disease_idx:
             return RecommendationResponse(query=disease, query_type="disease", model=self.name)
 
-        vec = self._disease_matrix[self._disease_idx[disease]].reshape(1, -1)
-        sims = cosine_similarity(vec, self._gene_matrix)[0]
+        # disease_matrix is (n_diseases, n_genes) – compare rows in gene-space
+        disease_vec = self._disease_matrix[self._disease_idx[disease]].reshape(1, -1)  # (1, n_genes)
+        disease_sims = cosine_similarity(disease_vec, self._disease_matrix)[0]          # (n_diseases,)
+        disease_sims[self._disease_idx[disease]] = 0.0
 
-        top_idx = np.argsort(sims)[::-1][:top_k]
+        # Weighted sum across all diseases → gene relevance scores
+        scores = disease_sims @ self._disease_matrix   # (n_genes,)
+
+        top_idx = np.argsort(scores)[::-1][:top_k]
         results = [
             RecommendationResult(
                 name=self._genes[i],
-                score=float(sims[i]),
-                reason="TF-IDF cosine similarity",
+                score=float(scores[i]),
+                reason="TF-IDF similar-disease aggregation",
             )
-            for i in top_idx if sims[i] > 0
+            for i in top_idx if scores[i] > 0
         ]
         return RecommendationResponse(
             query=disease, query_type="disease", results=results, model=self.name
